@@ -1,7 +1,112 @@
-# minimal-extension 
-## Description 
-Minimal extension for a custom datasource 
+# OHIF Minimal Extension
+
+## Description
+
+The goal of the minimal extension is to determine how to manually provide valid data to the OHIF Viewer. While it requires an extension, it is only making use of the dataSource, allowing defaults throughout the rest of the Viewer to handle everything else.
+
+## The Current State of This Example
+
+A single study has been selected from the sample data available by default. The following link sorts data so the study is the first one. The Patient Name is (Empty) and the Modality is DOC.
+
+https://viewer.ohif.org/?sortBy=studyDate&sortDirection=descending
+
+Selecting the Basic Viewer takes you to the following page:
+
+https://viewer.ohif.org/viewer?StudyInstanceUIDs=2.25.317377619501274872606137091638706705333
+
+This screenshot shows some of the page and the inspector. The data requests visible in the inspector are those we are trying to replicate with this extension by using a custom datasource which returns static JSON files in place of these requests.
+
+![The sample page we are attempting to replicate](assets/source-page.png)
+
+These are the data requests:
+
+1. studies - returns the studies-doc.json file
+1. series - returns the series.json file
+1. metadata - returns the metadata.json file
+1. pdf - Not implemented, but understood that the bulkdata is transformed to a request to fetch the pdf file.
+1. studies - This final request is not understood. What causes the app to make this request and why is it needed?
+
+## How to set this up
+
+This requires a small change to the core OHIF Viewer app, so you will need a local copy of that as well.
+
+```
+git clone https://github.com/certus-tech/ohif-minimal-extension.git
+```
+
+### Get the Viewer
+
+Clone the viewer. This will be on the latest version. Change to a released version: 3.9.2.
+
+```
+git clone https://github.com/OHIF/Viewers.git
+cd Viewers/
+git checkout tags/v3.9.2
+```
+
+### Build Both Projects
+
+In ohif-minimal-extension, run the following:
+
+```
+yarn install
+```
+
+In your local Viewers app, run the commands below. The link-extension should be executed AFTER running the install on the extension. The path to minimal-extension should include the folder 'minimal-extension' within the git module.
+
+```
+yarn install
+yarn cli link-extension <path-to-minimal-extension>
+```
+
+Before running the app, apply a patch to set the extension's datasource as the default one. This seemed the easiest way to ensure our datasource was used.
+
+```
+git apply <path-to-ohif-minimal-extension>/assets/viewer.patch
+```
+
+This completes the setup. You can run the Viewer app:
+
+```
+yarn start
+```
+
+### What the patch changes
+
+The data sources are defined in the following file:
+
+```
+Viewers/platform/app/public/config/default.js
+```
+
+The default data source name is changed to 'minimal'.
+
+```json
+defaultDataSourceName: 'minimal',
+```
+
+Add a new datasource is added for the minimal extension. This is inside the 'dataSources: [' array.
+
+```json
+    {
+      namespace: 'minimal-extension.dataSourcesModule.minimal-extension',
+      sourceName: 'minimal',
+      configuration: {
+        friendlyName: 'minimal local',
+        name: 'minimal',
+      },
+    },
+```
+
+## The Data Provided
+
+The data is provided from static json files within the extension. The original source of that data came from the public demo app. The public metadata request contained much more data than was relevant to the specific study used in this case. It has been shortened to only include the chosen study.
+
+A few fields were also added to the data. The first 3 lines in studies-doc.json were not found in the data copied. However, they include information relevant to display in the list view. The numeric values for Series and Instances when expanding the list entry have not been resolved. The appropriate fields appear to be present, but may not be extracted/converted correctly.
+
+
 ## Author 
 Certus
+
 ## License 
 MIT

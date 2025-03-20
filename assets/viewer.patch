@@ -1,0 +1,29 @@
+diff --git a/platform/app/public/config/default.js b/platform/app/public/config/default.js
+index 0e5443099..be4fa1911 100644
+--- a/platform/app/public/config/default.js
++++ b/platform/app/public/config/default.js
+@@ -24,7 +24,8 @@ window.config = {
+     prefetch: 25,
+   },
+   // filterQueryParam: false,
+-  defaultDataSourceName: 'dicomweb',
++  // defaultDataSourceName: 'dicomweb',
++  defaultDataSourceName: 'minimal',
+   /* Dynamic config allows user to pass "configUrl" query string this allows to load config without recompiling application. The regex will ensure valid configuration source */
+   // dangerouslyUseDynamicConfig: {
+   //   enabled: true,
+@@ -36,6 +37,14 @@ window.config = {
+   //   regex: /.*/,
+   // },
+   dataSources: [
++    {
++      namespace: 'minimal-extension.dataSourcesModule.minimal-extension',
++      sourceName: 'minimal',
++      configuration: {
++        friendlyName: 'minimal local',
++        name: 'minimal',
++      },
++    },
+     {
+       namespace: '@ohif/extension-default.dataSourcesModule.dicomweb',
+       sourceName: 'dicomweb',
