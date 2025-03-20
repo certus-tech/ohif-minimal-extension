@@ -81,13 +81,13 @@ Viewers/platform/app/public/config/default.js
 
 The default data source name is changed to 'minimal'.
 
-```json
+```
 defaultDataSourceName: 'minimal',
 ```
 
 Add a new datasource is added for the minimal extension. This is inside the 'dataSources: [' array.
 
-```json
+```
     {
       namespace: 'minimal-extension.dataSourcesModule.minimal-extension',
       sourceName: 'minimal',
