@@ -162,9 +162,7 @@ const createCustomDataSource = (): IWebApiDataSource => {
     getStudyInstanceUIDs: ({ params, query }) => {
       console.info('MinimalDataSource getStudyInstanceUIDs', params, query);
       return [
-        '1.3.46.670589.30.1.3.1.1625260923.1632320482484.1',
-        // '1.2.276.0.7230010.3.1.2.2155604110.4180.1021041295.21',
-        // '1.3.6.1.4.1.14519.5.2.1.4792.2001.105216574054253895819671475627',
+        '2.25.317377619501274872606137091638706705333',
       ];
     },
     getImageIdsForDisplaySet(displaySet) {
