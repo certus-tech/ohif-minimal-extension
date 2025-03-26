@@ -4,6 +4,26 @@
 
 The goal of the minimal extension is to determine how to manually provide valid data to the OHIF Viewer. While it requires an extension, it is only making use of the dataSource, allowing defaults throughout the rest of the Viewer to handle everything else.
 
+## Why We Need an Extension
+
+We would like to incorporate the OHIF Viewer within our existing applications. The data behind our systems is not DICOM. As a result, we are trying to understand how to implement a custom datasource which will provide our data to the OHIF Viewer.
+
+Some advice we have received was to convert our data to DICOM format and use that. However, we have more than twenty years of data for multiple clients and a significant codebase which will continue to use and update this data. Conversion is not an appropriate solution.
+
+Additional requirements which lead us to believe we need our own datasource include:
+* We need to control access based on the user requesting the data. This does not appear to be supported within the viewer, so we intend to have our datasource verify user identity before determining what data should be available.
+* Support for consensus diagnosis:
+  * This requires status of a communal process as well as user role conditions.
+  * Patient data will be available to selected users.
+  * Users may view, make notes and submit a diagnosis.
+    * Details are stored for multiple users, but each will only see their own.
+    * Users indicate when they have finished their analysis.
+  * Moderator will be able to assess a consensus
+    * They will see a list of users who have completed as well as any outstanding.
+    * Selecting a user who has completed will display notes and diagnosis details from that user.
+    * The moderator will prepare a consensus.
+  * Users can return to view the consensus once it is complete.
+
 ## The Current State of This Example
 
 A single study has been selected from the sample data available by default. The following link sorts data so the study is the first one. The Patient Name is (Empty) and the Modality is DOC.
@@ -25,6 +45,8 @@ These are the data requests:
 1. metadata - returns the metadata.json file
 1. pdf - Not implemented, but understood that the bulkdata is transformed to a request to fetch the pdf file.
 1. studies - This final request is not understood. What causes the app to make this request and why is it needed?
+
+This particular example may not be the best choice, but it was a small one. Some of the other studies, while they may not have a huge number of images, it is not rare to find a request for metadata returning several million lines of json. It would be helpful if we could eliminate anything unnecessary. While the documentation suggests we need to implement the IWebApiDataSource interface, this does not ensure that the viewer will be happy with the data returned. There is no documentation about required fields or structure within the responses.
 
 ## How to set this up
 
